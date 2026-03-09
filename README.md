@@ -43,36 +43,52 @@ These mechanisms improve reliability and simulate production-grade real-time sys
 
 Frontend:
 
-* Next.js (React framework)
+* Next.js 16 (React framework)
+* React 19
 * TypeScript
-* Tailwind CSS
+* Tailwind CSS 4
 
 Real-Time Communication:
 
-* Native WebSockets
+* Native WebSockets (ws library)
+
+Form Libraries:
+
+* react-international-phone (international phone input)
+* react-datepicker (date input handling)
+* date-fns (date formatting and manipulation)
+* country-list (country selection)
 
 Other Tools:
 
 * Node.js
 * npm
+* tsx (TypeScript execution)
 
 ---
 
 ## Project Structure
 
 ```
-patient-realtime-form
+patient-staff-system
 │
 ├── app
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── globals.css
 │   ├── patient
 │   │   └── page.tsx
-│   ├── staff
-│   │   └── page.tsx
+│   └── staff
+│       └── page.tsx
 │
 ├── components
+│   ├── FormDate.tsx
 │   ├── FormInput.tsx
+│   ├── FormSelect.tsx
+│   ├── FormTel.tsx
+│   ├── PatientCard.tsx
 │   ├── PatientForm.tsx
-│   └── PatientCard.tsx
+│   └── phoneInput.css
 │
 ├── services
 │   └── websocket.ts
@@ -81,9 +97,15 @@ patient-realtime-form
 │   ├── patient.ts
 │   └── status.ts
 │
+├── utils
+│   └── validation.ts
+│
 ├── websocket-server
 │   └── server.ts
 │
+├── package.json
+├── tsconfig.json
+├── next.config.ts
 └── README.md
 ```
 
@@ -164,7 +186,7 @@ npm install
 ### 2. Start the WebSocket server
 
 ```
-npx tsx websocket-server/server.ts
+npm run websocket
 ```
 
 WebSocket server runs on:
@@ -174,6 +196,8 @@ ws://localhost:8080
 ```
 
 ### 3. Start the Next.js application
+
+In a new terminal:
 
 ```
 npm run dev
