@@ -1,5 +1,5 @@
 let socket: WebSocket | null = null
-let messageQueue: string[] = []
+const messageQueue: string[] = []
 
 function getWebSocketURL(): string {
   if (typeof window === "undefined") return "ws://localhost:8080"

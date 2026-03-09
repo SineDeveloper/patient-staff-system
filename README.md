@@ -1,4 +1,4 @@
-# Patient Real-Time Form System
+# Patient Real-Time Form System v0.1.0
 
 ## Project Overview
 
@@ -177,36 +177,66 @@ This provides staff members with real-time insight into patient progress.
 
 ## Environment Configuration
 
-Before running the project, configure environment variables:
+This project requires specific environment variables for both development and production environments.
+
+### Required Environment Variables
+
+| Variable | Required | Description | Default |
+|----------|----------|-------------|---------|
+| `NEXT_PUBLIC_WS_URL` | Yes | WebSocket server URL for frontend connection | `ws://localhost:8080` (dev) |
+| `WS_PORT` | No | WebSocket server port (backend only) | `8080` |
+| `NODE_ENV` | No | Environment mode (affects logging) | `development` |
+
+### Setting Up Environment Variables
+
+#### For Development:
 
 1. Create `.env.local` in the project root:
-```bash
-echo "NEXT_PUBLIC_WS_URL=ws://localhost:8080" > .env.local
-```
+   ```bash
+   NEXT_PUBLIC_WS_URL=ws://localhost:8080
+   WS_PORT=8080
+   NODE_ENV=development
+   ```
 
-2. Or manually create `.env.local` with:
-```
-# WebSocket URL (frontend connection)
-NEXT_PUBLIC_WS_URL=ws://localhost:8080
+2. Or use the provided script:
+   ```bash
+   echo "NEXT_PUBLIC_WS_URL=ws://localhost:8080" > .env.local
+   echo "WS_PORT=8080" >> .env.local
+   echo "NODE_ENV=development" >> .env.local
+   ```
 
-# WebSocket Server Port (backend)
-WS_PORT=8080
+#### For Production:
 
-# Environment
-NODE_ENV=development
-```
+1. **Frontend (Vercel)**: Set in Vercel dashboard under Settings → Environment Variables:
+   ```
+   NEXT_PUBLIC_WS_URL=wss://your-websocket-server.com
+   NODE_ENV=production
+   ```
 
-### Configuration by Environment
+2. **WebSocket Server**: Set on your hosting platform:
+   ```
+   WS_PORT=8080
+   NODE_ENV=production
+   ```
+
+### Environment-Specific Configurations
 
 **Development:**
-- `NEXT_PUBLIC_WS_URL=ws://localhost:8080`
-- `WS_PORT=8080`
-- `NODE_ENV=development`
+- WebSocket URL: `ws://localhost:8080` (insecure, localhost)
+- Logging: Enabled (console output visible)
+- Auto-reconnection: Aggressive (3-second intervals)
 
 **Production:**
-- `NEXT_PUBLIC_WS_URL=wss://your-domain.com` (use secure WebSocket)
-- `WS_PORT=8080` (or your production port)
-- `NODE_ENV=production` (suppresses debug logs)
+- WebSocket URL: `wss://your-domain.com` (secure, HTTPS required)
+- Logging: Suppressed (no console spam in production)
+- Auto-reconnection: Conservative (longer intervals recommended)
+
+### Important Notes
+
+- `NEXT_PUBLIC_WS_URL` is exposed to the browser, so it must use `wss://` in production
+- Never commit `.env.local` to version control
+- For Vercel deployment, environment variables are set in the dashboard, not in files
+- Test WebSocket connections after deployment using browser developer tools
 
 ---
 
@@ -253,28 +283,85 @@ npm run start
 
 ### Pre-deployment Checklist
 
-- [ ] Environment variables configured for production
-- [ ] `NODE_ENV=production` set to suppress debug logs
-- [ ] `NEXT_PUBLIC_WS_URL` set to production WebSocket URL (use `wss://` for HTTPS)
-- [ ] WebSocket server running on secure port (typically reverse-proxied behind HTTPS)
-- [ ] ESLint passing: `npm run lint`
-- [ ] Build successful: `npm run build`
-- [ ] Security headers configured (if using reverse proxy)
-- [ ] CORS properly configured for WebSocket connections
-- [ ] Database/persistence layer implemented if needed
-- [ ] Error logging and monitoring set up
+- [ ] **Environment Variables**: All required variables configured for production
+- [ ] **WebSocket Server**: Deployed separately with proper domain/URL
+- [ ] **Security**: `NEXT_PUBLIC_WS_URL` uses `wss://` protocol
+- [ ] **NODE_ENV**: Set to `production` to suppress debug logs
+- [ ] **Build**: `npm run build` completes successfully
+- [ ] **Linting**: `npm run lint` passes without errors
+- [ ] **WebSocket Testing**: Connection works in production environment
+- [ ] **CORS**: Properly configured for WebSocket server
+- [ ] **HTTPS**: WebSocket server accessible via secure connection
+- [ ] **Domain**: WebSocket server domain matches `NEXT_PUBLIC_WS_URL`
+- [ ] **Monitoring**: Error logging and monitoring set up (recommended)
 
 ### Deploying to Vercel (Recommended)
 
-1. Push code to GitHub
-2. Connect repo to Vercel
-3. Set environment variables in Vercel dashboard
-4. Deploy
+Vercel is the recommended platform for deploying the Next.js frontend. However, since Vercel doesn't support WebSocket connections natively, you'll need to deploy the WebSocket server separately to a platform that supports persistent connections (like Railway, Render, or Heroku).
 
-**Note:** For WebSocket support, you may need to use a separate server. Consider:
-- Separating the WebSocket server to a dedicated service (Heroku, Railway, etc.)
-- Using Vercel functions with a WebSocket provider
-- Setting `NEXT_PUBLIC_WS_URL` to your WebSocket server URL
+#### Step-by-Step Vercel Deployment:
+
+1. **Push your code to GitHub**
+   ```
+   git add .
+   git commit -m "Ready for deployment"
+   git push origin main
+   ```
+
+2. **Connect to Vercel**
+   - Go to [vercel.com](https://vercel.com) and sign in
+   - Click "New Project"
+   - Import your GitHub repository
+   - Configure the project:
+     - **Framework Preset**: Next.js
+     - **Root Directory**: `patient-staff-system` (if your repo has multiple projects)
+     - **Build Command**: `npm run build`
+     - **Output Directory**: `.next` (default)
+
+3. **Configure Environment Variables in Vercel**
+   - In your Vercel project dashboard, go to "Settings" → "Environment Variables"
+   - Add the following variables:
+     ```
+     NEXT_PUBLIC_WS_URL=wss://your-websocket-server-domain.com
+     NODE_ENV=production
+     ```
+   - **Important**: Replace `your-websocket-server-domain.com` with your actual WebSocket server URL
+   - The `NEXT_PUBLIC_WS_URL` must use `wss://` (secure WebSocket) for production
+
+4. **Deploy the WebSocket Server Separately**
+   - Deploy `websocket-server/server.ts` to a platform that supports WebSockets:
+     - **Railway**: Excellent for Node.js apps with persistent connections
+     - **Render**: Free tier available, good WebSocket support
+     - **Heroku**: Traditional choice, but has some limitations
+     - **AWS EC2/Lambda**: For more control
+   - Set environment variables on your WebSocket server:
+     ```
+     WS_PORT=8080
+     NODE_ENV=production
+     ```
+   - Ensure your WebSocket server is accessible via HTTPS (wss://)
+
+5. **Deploy**
+   - Click "Deploy" in Vercel
+   - Wait for the build to complete
+   - Your site will be live at `your-project.vercel.app`
+
+#### Environment Variables Reference
+
+| Variable | Frontend/Backend | Description | Development | Production |
+|----------|------------------|-------------|-------------|------------|
+| `NEXT_PUBLIC_WS_URL` | Frontend | WebSocket server URL | `ws://localhost:8080` | `wss://your-ws-server.com` |
+| `WS_PORT` | Backend | WebSocket server port | `8080` | `8080` (or your production port) |
+| `NODE_ENV` | Both | Environment mode | `development` | `production` |
+
+#### Troubleshooting Vercel Deployment
+
+- **WebSocket Connection Issues**: Ensure `NEXT_PUBLIC_WS_URL` points to your separate WebSocket server
+- **Build Failures**: Check that all dependencies are in `package.json`
+- **Environment Variables**: Use `NEXT_PUBLIC_` prefix for client-side variables
+- **CORS Issues**: Configure CORS in your WebSocket server if needed
+
+**Note:** For a fully serverless solution, consider using WebSocket providers like Pusher, Socket.io with a cloud service, or Vercel Edge Functions with a WebSocket proxy.
 
 ---
 

@@ -8,17 +8,17 @@ type Props = {
 }
 
 function getStatusColor(status: string) {
-  if (status === "ACTIVE") return "bg-green-100 text-green-700"
-  if (status === "INACTIVE") return "bg-gray-200 text-gray-700"
-  if (status === "SUBMITTED") return "bg-blue-100 text-blue-700"
+  if (status === "ACTIVE") return "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200"
+  if (status === "INACTIVE") return "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+  if (status === "SUBMITTED") return "bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200"
 
   return ""
 }
 
 export default function PatientCard({ patient, status }: Props) {
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <h2 className="text-xl font-semibold mb-2">
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6">
+      <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
         Current Patient Information
       </h2>
 

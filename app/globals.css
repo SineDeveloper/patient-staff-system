@@ -25,3 +25,33 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Dark mode support for react-datepicker */
+.dark .react-datepicker__header {
+  @apply bg-slate-700;
+}
+
+.dark .react-datepicker {
+  @apply bg-slate-700 border-slate-600;
+}
+
+.dark .react-datepicker__month {
+  @apply bg-slate-700;
+}
+
+.dark .react-datepicker__day-name,
+.dark .react-datepicker__day {
+  @apply text-white;
+}
+
+.dark .react-datepicker__day:hover {
+  @apply bg-blue-600;
+}
+
+.dark .react-datepicker__day--selected {
+  @apply bg-blue-500;
+}
+
+.dark .react-datepicker__navigation-icon::before {
+  @apply border-gray-300;
+}

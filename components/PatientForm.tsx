@@ -11,7 +11,6 @@ import { sendMessage } from "@/services/websocket"
 import { isValidEmail, isValidPhone } from "@/utils/validation"
 
 import "react-datepicker/dist/react-datepicker.css"
-import "./phoneInput.css"
 
 import { format } from "date-fns"
 import { getNames } from "country-list"
@@ -102,8 +101,8 @@ export default function PatientForm() {
         >
 
             {/* PATIENT INFORMATION */}
-            <div className="border rounded-xl p-6 bg-gray-50 border-gray-300">
-                <h2 className="text-lg font-semibold mb-4">
+            <div className="border rounded-xl p-6 bg-gray-50 dark:bg-slate-800 border-gray-300 dark:border-slate-700">
+                <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
                     Patient Information
                 </h2>
                 <div className="grid grid-cols-1 gap-4">
@@ -160,8 +159,8 @@ export default function PatientForm() {
 
 
             {/* CONTACT INFORMATION */}
-            <div className="border rounded-xl p-6 bg-gray-50 border-gray-300">
-                <h2 className="text-lg font-semibold mb-4">
+            <div className="border rounded-xl p-6 bg-gray-50 dark:bg-slate-800 border-gray-300 dark:border-slate-700">
+                <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
                     Contact Information
                 </h2>
                 <div className="grid grid-cols-1 gap-4">
@@ -231,8 +230,8 @@ export default function PatientForm() {
 
 
             {/* EMERGENCY INFORMATION */}
-            <div className="border rounded-xl p-6 bg-gray-50 border-gray-300">
-                <h2 className="text-lg font-semibold mb-4">
+            <div className="border rounded-xl p-6 bg-gray-50 dark:bg-slate-800 border-gray-300 dark:border-slate-700">
+                <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
                     Emergency Information
                 </h2>
 
@@ -252,7 +251,7 @@ export default function PatientForm() {
             {/* ERROR */}
             {
                 error && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-red-500 dark:text-red-400 text-sm">
                         {error}
                     </p>
                 )
@@ -261,7 +260,7 @@ export default function PatientForm() {
             {/* SUBMIT */}
             <button
                 type="submit"
-                className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+                className="w-full bg-blue-600 dark:bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 transition"
             >
                 Submit
             </button>
