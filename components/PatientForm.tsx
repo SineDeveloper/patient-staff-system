@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import FormInput from "./FormInput"
 import FormSelect from "./FormSelect"
 import FormDate from "./FormDate"
 import FormTel from "./FormTel"
 
 import { Patient } from "@/types/patient"
-import { connectWebSocket } from "@/services/websocket"
+import { sendMessage } from "@/services/websocket"
 import { isValidEmail, isValidPhone } from "@/utils/validation"
 
 import "react-datepicker/dist/react-datepicker.css"
@@ -36,8 +36,6 @@ export default function PatientForm() {
     const [error, setError] = useState("")
     const countries = getNames().sort()
 
-    const socket = useMemo(() => connectWebSocket(), [])
-
     function handleChange(
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
     ) {
@@ -56,7 +54,7 @@ export default function PatientForm() {
 
         setFormData(updatedData)
 
-        socket?.send(
+        sendMessage(
             JSON.stringify({
                 type: "FORM_UPDATE",
                 payload: updatedData,
@@ -89,7 +87,7 @@ export default function PatientForm() {
 
         setError("")
 
-        socket?.send(
+        sendMessage(
             JSON.stringify({
                 type: "FORM_SUBMIT",
                 payload: formData,

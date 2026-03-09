@@ -1,5 +1,6 @@
 import { Patient } from "@/types/patient"
 import { PatientStatus } from "@/types/status"
+import { format, parseISO } from "date-fns"
 
 type Props = {
   patient: Patient
@@ -29,15 +30,15 @@ export default function PatientCard({ patient, status }: Props) {
         <p><strong>First Name:</strong> {patient.firstName}</p>
         <p><strong>Middle Name:</strong> {patient.middleName}</p>
         <p><strong>Last Name:</strong> {patient.lastName}</p>
-        <p><strong>Date of Birth:</strong> {patient.dateOfBirth}</p>
+        <p><strong>Date of Birth:</strong> {patient.dateOfBirth ? format(parseISO(patient.dateOfBirth), 'dd MMM yyyy') : ''}</p>
         <p><strong>Gender:</strong> {patient.gender}</p>
         <p><strong>Phone:</strong> {patient.phone}</p>
         <p><strong>Email:</strong> {patient.email}</p>
         <p><strong>Address:</strong> {patient.address}</p>
         <p><strong>Language:</strong> {patient.preferredLanguage}</p>
         <p><strong>Nationality:</strong> {patient.nationality}</p>
-        <p><strong>Emergency Contact:</strong> {patient.emergencyContact}</p>
-        <p><strong>Religion:</strong> {patient.religion}</p>
+        <p><strong>Emergency Contact:</strong> {patient.emergencyContact || "N/A"}</p>
+        <p><strong>Religion:</strong> {patient.religion || "N/A"}</p>
       </div>
     </div >
   )

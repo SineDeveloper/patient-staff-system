@@ -26,7 +26,7 @@ export default function FormDatePicker({
 
       <DatePicker
         selected={value}
-        onChange={(date) => onChange(name, date)}
+        onChange={(date: Date | null) => onChange(name, date)}
         dateFormat="dd MMM yyyy"
         placeholderText="Select date"
         className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"

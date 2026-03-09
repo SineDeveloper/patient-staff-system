@@ -1,14 +1,21 @@
 import { WebSocketServer } from "ws"
 
-const wss = new WebSocketServer({ port: 8080 })
+const PORT = process.env.WS_PORT ? parseInt(process.env.WS_PORT) : 8080
+const wss = new WebSocketServer({ port: PORT })
 
-console.log("WebSocket server running on ws://localhost:8080")
+if (process.env.NODE_ENV !== "production") {
+  console.log(`WebSocket server running on ws://localhost:${PORT}`)
+}
 
 wss.on("connection", (ws) => {
-  console.log("Client connected")
+  if (process.env.NODE_ENV !== "production") {
+    console.log("Client connected")
+  }
 
   ws.on("message", (message) => {
-    console.log("Received:", message.toString())
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Received:", message.toString())
+    }
 
     // Broadcast message to all connected clients
     wss.clients.forEach((client) => {
@@ -19,6 +26,8 @@ wss.on("connection", (ws) => {
   })
 
   ws.on("close", () => {
-    console.log("Client disconnected")
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Client disconnected")
+    }
   })
 })

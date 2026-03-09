@@ -175,6 +175,41 @@ This provides staff members with real-time insight into patient progress.
 
 ---
 
+## Environment Configuration
+
+Before running the project, configure environment variables:
+
+1. Create `.env.local` in the project root:
+```bash
+echo "NEXT_PUBLIC_WS_URL=ws://localhost:8080" > .env.local
+```
+
+2. Or manually create `.env.local` with:
+```
+# WebSocket URL (frontend connection)
+NEXT_PUBLIC_WS_URL=ws://localhost:8080
+
+# WebSocket Server Port (backend)
+WS_PORT=8080
+
+# Environment
+NODE_ENV=development
+```
+
+### Configuration by Environment
+
+**Development:**
+- `NEXT_PUBLIC_WS_URL=ws://localhost:8080`
+- `WS_PORT=8080`
+- `NODE_ENV=development`
+
+**Production:**
+- `NEXT_PUBLIC_WS_URL=wss://your-domain.com` (use secure WebSocket)
+- `WS_PORT=8080` (or your production port)
+- `NODE_ENV=production` (suppresses debug logs)
+
+---
+
 ## How to Run the Project
 
 ### 1. Install dependencies
@@ -189,11 +224,7 @@ npm install
 npm run websocket
 ```
 
-WebSocket server runs on:
-
-```
-ws://localhost:8080
-```
+WebSocket server runs on the port specified in `WS_PORT` environment variable (default: ws://localhost:8080).
 
 ### 3. Start the Next.js application
 
@@ -211,11 +242,48 @@ http://localhost:3000
 
 ---
 
+## Production Build & Deployment
+
+### Build the application
+
+```
+npm run build
+npm run start
+```
+
+### Pre-deployment Checklist
+
+- [ ] Environment variables configured for production
+- [ ] `NODE_ENV=production` set to suppress debug logs
+- [ ] `NEXT_PUBLIC_WS_URL` set to production WebSocket URL (use `wss://` for HTTPS)
+- [ ] WebSocket server running on secure port (typically reverse-proxied behind HTTPS)
+- [ ] ESLint passing: `npm run lint`
+- [ ] Build successful: `npm run build`
+- [ ] Security headers configured (if using reverse proxy)
+- [ ] CORS properly configured for WebSocket connections
+- [ ] Database/persistence layer implemented if needed
+- [ ] Error logging and monitoring set up
+
+### Deploying to Vercel (Recommended)
+
+1. Push code to GitHub
+2. Connect repo to Vercel
+3. Set environment variables in Vercel dashboard
+4. Deploy
+
+**Note:** For WebSocket support, you may need to use a separate server. Consider:
+- Separating the WebSocket server to a dedicated service (Heroku, Railway, etc.)
+- Using Vercel functions with a WebSocket provider
+- Setting `NEXT_PUBLIC_WS_URL` to your WebSocket server URL
+
+---
+
 ## Demo Instructions
 
-1. Start the WebSocket server.
-2. Start the Next.js application.
-3. Open two browser tabs:
+1. Ensure `.env.local` is configured
+2. Start the WebSocket server: `npm run websocket`
+3. In a new terminal, start the Next.js application: `npm run dev`
+4. Open two browser tabs:
 
 Patient form:
 http://localhost:3000/patient

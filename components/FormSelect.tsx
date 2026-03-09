@@ -4,10 +4,10 @@ type Props = {
     value: string
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
     required?: boolean
-    options: []
+    options: string[]
 }
 
-export default function FormInput({
+export default function FormSelect({
     label,
     name,
     value,
