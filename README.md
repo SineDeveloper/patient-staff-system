@@ -1,4 +1,4 @@
-# Patient Real-Time Form System v0.1.0
+# Patient Real-Time Form System
 
 ## Project Overview
 
@@ -88,7 +88,6 @@ patient-staff-system
 │   ├── FormTel.tsx
 │   ├── PatientCard.tsx
 │   ├── PatientForm.tsx
-│   └── phoneInput.css
 │
 ├── services
 │   └── websocket.ts
