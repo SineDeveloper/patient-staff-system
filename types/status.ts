@@ -1,0 +1,1 @@
+export type PatientStatus = "ACTIVE" | "INACTIVE" | "SUBMITTED"
