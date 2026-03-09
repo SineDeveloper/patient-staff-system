@@ -26,18 +26,18 @@ export default function PatientCard({ patient, status }: Props) {
       </span>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-        <p><strong>First Name:</strong> {patient.firstName || "N/A"}</p>
-        <p><strong>Middle Name:</strong> {patient.middleName || "N/A"}</p>
-        <p><strong>Last Name:</strong> {patient.lastName || "N/A"}</p>
-        <p><strong>Date of Birth:</strong> {patient.dateOfBirth || "N/A"}</p>
-        <p><strong>Gender:</strong> {patient.gender || "N/A"}</p>
-        <p><strong>Phone:</strong> {patient.phone || "N/A"}</p>
-        <p><strong>Email:</strong> {patient.email || "N/A"}</p>
-        <p><strong>Address:</strong> {patient.address || "N/A"}</p>
-        <p><strong>Language:</strong> {patient.preferredLanguage || "N/A"}</p>
-        <p><strong>Nationality:</strong> {patient.nationality || "N/A"}</p>
-        <p><strong>Emergency Contact:</strong> {patient.emergencyContact || "N/A"}</p>
-        <p><strong>Religion:</strong> {patient.religion || "N/A"}</p>
+        <p><strong>First Name:</strong> {patient.firstName}</p>
+        <p><strong>Middle Name:</strong> {patient.middleName}</p>
+        <p><strong>Last Name:</strong> {patient.lastName}</p>
+        <p><strong>Date of Birth:</strong> {patient.dateOfBirth}</p>
+        <p><strong>Gender:</strong> {patient.gender}</p>
+        <p><strong>Phone:</strong> {patient.phone}</p>
+        <p><strong>Email:</strong> {patient.email}</p>
+        <p><strong>Address:</strong> {patient.address}</p>
+        <p><strong>Language:</strong> {patient.preferredLanguage}</p>
+        <p><strong>Nationality:</strong> {patient.nationality}</p>
+        <p><strong>Emergency Contact:</strong> {patient.emergencyContact}</p>
+        <p><strong>Religion:</strong> {patient.religion}</p>
       </div>
     </div >
   )

@@ -28,7 +28,7 @@ export default function FormInput({
                 required={required}
                 className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-                <option value="">Select {name}</option>
+                <option value="">Select {label}</option>
                 {options.map((item) => (
                     <option key={item} value={item}>
                         {item}

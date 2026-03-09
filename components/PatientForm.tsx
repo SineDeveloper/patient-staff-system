@@ -1,16 +1,23 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useMemo } from "react"
 import FormInput from "./FormInput"
 import FormSelect from "./FormSelect"
+import FormDate from "./FormDate"
+import FormTel from "./FormTel"
+
 import { Patient } from "@/types/patient"
 import { connectWebSocket } from "@/services/websocket"
 import { isValidEmail, isValidPhone } from "@/utils/validation"
-import DatePicker from "react-datepicker"
+
 import "react-datepicker/dist/react-datepicker.css"
+import "./phoneInput.css"
+
 import { format } from "date-fns"
+import { getNames } from "country-list"
 
 export default function PatientForm() {
+
     const [formData, setFormData] = useState<Patient>({
         firstName: "",
         middleName: "",
@@ -26,14 +33,21 @@ export default function PatientForm() {
         religion: "",
     })
 
-    const [dob, setDob] = useState<Date | null>(null)
     const [error, setError] = useState("")
-    const socket = connectWebSocket()
+    const countries = getNames().sort()
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+    const socket = useMemo(() => connectWebSocket(), [])
+
+    function handleChange(
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) {
         const { name, value } = e.target
+        updateField(name, value)
+    }
 
-        setError("") // clear error when user edits
+    function updateField(name: string, value: string) {
+
+        setError("")
 
         const updatedData = {
             ...formData,
@@ -50,7 +64,17 @@ export default function PatientForm() {
         )
     }
 
+    function updateDatePicker(name: string, value: Date | null) {
+
+        const formattedDate = value
+            ? format(value, "yyyy-MM-dd")
+            : ""
+
+        updateField(name, formattedDate)
+    }
+
     function handleSubmit(e: React.FormEvent) {
+
         e.preventDefault()
 
         if (!isValidEmail(formData.email)) {
@@ -76,150 +100,174 @@ export default function PatientForm() {
     return (
         <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            className="patient-form-container space-y-8"
         >
 
-            <FormInput
-                label="First Name"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-            />
-
-            <FormInput
-                label="Middle Name"
-                name="middleName"
-                value={formData.middleName || ""}
-                onChange={handleChange}
-            />
-
-            <FormInput
-                label="Last Name"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-            />
-
-            <div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-gray-700">
-                    Date of Birth *
-                </label>
-
-                <DatePicker
-                    selected={dob}
-                    onChange={(date: Date | null) => {
-                        setDob(date)
-
-                        const formatted = date
-                            ? format(date, "dd MMM yyyy")
-                            : ""
-
-                        const updatedData = {
-                            ...formData,
-                            dateOfBirth: formatted,
-                        }
-
-                        setFormData(updatedData)
-
-                        socket?.send(
-                            JSON.stringify({
-                                type: "FORM_UPDATE",
-                                payload: updatedData,
-                            })
-                        )
-                    }}
-                    dateFormat="dd MMM yyyy"
-                    placeholderText="Select date"
-                    className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    maxDate={new Date()}
-                    //minDate={new Date("1900-01-01")}
-                    showYearDropdown
-                    showMonthDropdown
-                    dropdownMode="select"
-                />
+            {/* PATIENT INFORMATION */}
+            <div className="border rounded-xl p-6 bg-gray-50 border-gray-300">
+                <h2 className="text-lg font-semibold mb-4">
+                    Patient Information
+                </h2>
+                <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <FormInput
+                            label="First Name"
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            required
+                        />
+                        <FormInput
+                            label="Middle Name"
+                            name="middleName"
+                            value={formData.middleName || ""}
+                            onChange={handleChange}
+                        />
+                        <FormInput
+                            label="Last Name"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormDate
+                            label="Date of Birth"
+                            name="dateOfBirth"
+                            value={
+                                formData.dateOfBirth
+                                    ? new Date(formData.dateOfBirth)
+                                    : null
+                            }
+                            required
+                            onChange={updateDatePicker}
+                        />
+                        <FormSelect
+                            label="Gender"
+                            name="gender"
+                            value={formData.gender}
+                            options={[
+                                "Male",
+                                "Female",
+                                "Other",
+                                "Prefer not to say",
+                            ]}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
             </div>
 
-            <FormSelect
-                label="Gender"
-                name="gender"
-                value={formData.gender}
-                options={["Male", "Female", "Other", "Prefer not to say"]}
-                onChange={handleChange}
-                required
-            />
 
-            <FormInput
-                label="Phone Number"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-            />
+            {/* CONTACT INFORMATION */}
+            <div className="border rounded-xl p-6 bg-gray-50 border-gray-300">
+                <h2 className="text-lg font-semibold mb-4">
+                    Contact Information
+                </h2>
+                <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            <FormInput
-                label="Email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-            />
+                        <FormTel
+                            label="Phone Number"
+                            name="phone"
+                            value={formData.phone}
+                            required
+                            onChange={updateField}
+                        />
 
-            <FormInput
-                label="Address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-            />
+                        <FormInput
+                            label="Email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 gap-4">
 
-            <FormInput
-                label="Preferred Language"
-                name="preferredLanguage"
-                value={formData.preferredLanguage}
-                onChange={handleChange}
-                required
-            />
+                        <FormInput
+                            label="Address"
+                            name="address"
+                            value={formData.address}
+                            onChange={handleChange}
+                            required
+                        />
 
-            <FormInput
-                label="Nationality"
-                name="nationality"
-                value={formData.nationality}
-                onChange={handleChange}
-                required
-            />
+                        <FormSelect
+                            label="Preferred Language"
+                            name="preferredLanguage"
+                            value={formData.preferredLanguage}
+                            options={[
+                                "Thai",
+                                "English",
+                                "Chinese",
+                                "Malay",
+                                "Other",
+                            ]}
+                            onChange={handleChange}
+                            required
+                        />
 
-            <FormInput
-                label="Emergency Contact"
-                name="emergencyContact"
-                value={formData.emergencyContact}
-                onChange={handleChange}
-            />
+                        <FormSelect
+                            label="Nationality"
+                            name="nationality"
+                            value={formData.nationality}
+                            options={countries}
+                            onChange={handleChange}
+                            required
+                        />
 
-            <FormInput
-                label="Religion"
-                name="religion"
-                value={formData.religion}
-                onChange={handleChange}
-            />
+                        <FormInput
+                            label="Religion"
+                            name="religion"
+                            value={formData.religion}
+                            onChange={handleChange}
+                        />
 
-            {/* Error Message */}
-            {error && (
-                <p className="col-span-full text-red-500 text-sm">
-                    {error}
-                </p>
-            )}
+                    </div>
+                </div>
+            </div>
 
+
+            {/* EMERGENCY INFORMATION */}
+            <div className="border rounded-xl p-6 bg-gray-50 border-gray-300">
+                <h2 className="text-lg font-semibold mb-4">
+                    Emergency Information
+                </h2>
+
+                <div className="grid grid-cols-1 gap-4">
+
+                    <FormInput
+                        label="Emergency Contact"
+                        name="emergencyContact"
+                        value={formData.emergencyContact}
+                        onChange={handleChange}
+                    />
+
+                </div>
+            </div>
+
+
+            {/* ERROR */}
+            {
+                error && (
+                    <p className="text-red-500 text-sm">
+                        {error}
+                    </p>
+                )
+            }
+
+            {/* SUBMIT */}
             <button
                 type="submit"
-                className="col-span-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+                className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
             >
                 Submit
             </button>
 
-        </form>
+        </form >
     )
 }

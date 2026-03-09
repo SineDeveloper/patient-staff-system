@@ -164,7 +164,7 @@ npm install
 ### 2. Start the WebSocket server
 
 ```
-npx ts-node websocket-server/server.ts
+npx tsx websocket-server/server.ts
 ```
 
 WebSocket server runs on:
