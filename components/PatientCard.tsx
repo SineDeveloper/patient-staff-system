@@ -37,7 +37,13 @@ export default function PatientCard({ patient, status }: Props) {
         <p><strong>Address:</strong> {patient.address}</p>
         <p><strong>Language:</strong> {patient.preferredLanguage}</p>
         <p><strong>Nationality:</strong> {patient.nationality}</p>
-        <p><strong>Emergency Contact:</strong> {patient.emergencyContact || "N/A"}</p>
+        <p><strong>Emergency Contact:</strong> {patient.emergencyContact || "N/A"}
+          {patient.emergencyContact && patient.emergencyContactName && (
+            <> ({patient.emergencyContactName}
+              {patient.emergencyContactRelationship && ` - ${patient.emergencyContactRelationship}`})
+            </>
+          )}
+        </p>
         <p><strong>Religion:</strong> {patient.religion || "N/A"}</p>
       </div>
     </div >

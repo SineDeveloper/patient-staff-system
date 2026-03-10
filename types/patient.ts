@@ -11,4 +11,6 @@ export type Patient = {
   nationality: string
   emergencyContact: string
   religion: string
+  emergencyContactName?: string
+  emergencyContactRelationship?: string
 }

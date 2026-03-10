@@ -30,6 +30,8 @@ export default function PatientForm() {
         nationality: "",
         emergencyContact: "",
         religion: "",
+        emergencyContactName: "",
+        emergencyContactRelationship: "",
     })
 
     const [error, setError] = useState("")
@@ -236,16 +238,38 @@ export default function PatientForm() {
                 </h2>
 
                 <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-4">
 
-                    <FormInput
-                        label="Emergency Contact"
-                        name="emergencyContact"
-                        value={formData.emergencyContact}
-                        onChange={handleChange}
-                    />
+                        <FormInput
+                            label="Emergency Contact"
+                            name="emergencyContact"
+                            value={formData.emergencyContact}
+                            onChange={handleChange}
+                        />
 
+                    </div>
+
+                    {formData.emergencyContact && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                            <FormInput
+                                label="Contact Name"
+                                name="emergencyContactName"
+                                value={formData.emergencyContactName || ""}
+                                onChange={handleChange}
+                            />
+                            <FormInput
+                                label="Contact Relationship"
+                                name="emergencyContactRelationship"
+                                value={formData.emergencyContactRelationship || ""}
+                                onChange={handleChange}
+                            />
+
+                        </div>
+                    )}
                 </div>
             </div>
+
 
 
             {/* ERROR */}
