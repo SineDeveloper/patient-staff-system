@@ -10,6 +10,8 @@ export default function Home() {
       <div className="flex gap-4">
         <Link
           href="/patient"
+          target="_blank"
+          rel="noopener noreferrer"
           className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
         >
           Go to Patient
@@ -17,6 +19,8 @@ export default function Home() {
 
         <Link
           href="/staff"
+          target="_blank"
+          rel="noopener noreferrer"
           className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
         >
           Go to Staff
