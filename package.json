@@ -19,7 +19,6 @@
     "react-dom": "19.2.3",
     "react-international-phone": "^4.8.0",
     "ws": "^8.19.0"
-    "@vercel/analytics": "latest"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
